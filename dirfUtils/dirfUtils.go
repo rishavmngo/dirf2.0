@@ -42,3 +42,16 @@ func CreateFromPaths(paths []string) {
 		}
 	}
 }
+
+func PrintHelpMenu() {
+
+	fmt.Println("USAGE:")
+	fmt.Println("\tExamples:")
+	fmt.Println("\t>> dirf --noArgs\n\t>> Paths: a/b+d/c will expand into ['a/b/c' 'a/d/c']")
+	fmt.Println("\t>> dirf --noArgs\n\t>> Paths: a/$.component.jsx+$.styles.css (will expand into ['a/a.component.jsx' 'a/a.styles.css'])")
+	fmt.Println("\tExamples:")
+	fmt.Println("\t>> dirf a/b/c d/c+c/e (can pass the paths directly as arguments but '$' expansion) can be used only using escape sequence and single quotes")
+	fmt.Println("OPTIONS:")
+	fmt.Println("\t--noArgs \tCreate directory and fils with standard input")
+	fmt.Println("\t--help,-h \tFor help")
+}

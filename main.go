@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"dirf/dirfUtils"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -20,6 +22,7 @@ func ExpandPath(command string) {
 
 	subCommands := strings.Split(command, "/")
 	// lastFileDir := subCommand[len(subCommand) - 1] == ""
+	var globaVar string
 
 	paths := []string{""}
 	temp := []string{}
@@ -31,6 +34,13 @@ func ExpandPath(command string) {
 		}
 		for _, dir := range splitByPlus {
 			for _, path := range paths {
+
+				if string(dir[0]) == "$" {
+
+					dir = globaVar + dir[1:]
+				} else {
+					globaVar = dir
+				}
 
 				temp = append(temp, path+dir+addSlashOrNot(commandIndex, subCommands))
 			}
@@ -46,8 +56,44 @@ func ExpandPath(command string) {
 func main() {
 	commands := os.Args[1:]
 
+	if len(commands) < 1 {
+		fmt.Println("Error: path is required")
+		return
+	}
+
 	for _, command := range commands {
-		ExpandPath(command)
+		if string(command[0]) == "-" {
+			switch string(command[1:]) {
+			case "-noArgs":
+				fmt.Print("Paths: ")
+				reader := bufio.NewReader(os.Stdin)
+				// ReadString will block until the delimiter is entered
+				input, err := reader.ReadString('\n')
+				if err != nil {
+					fmt.Println("An error occured while reading input. Please try again", err)
+					return
+				}
+
+				// remove the delimeter from the string
+				input = strings.TrimSuffix(input, "\n")
+				co := strings.Split(input, " ")
+
+				for _, command := range co {
+
+					ExpandPath(command)
+				}
+			case "h", "-help":
+				dirfUtils.PrintHelpMenu()
+			default:
+				fmt.Println("Error: " + "\"" + string(command[1:]) + "\"" + " " + "not recognized")
+				fmt.Println("-h, --help for help menu")
+			}
+
+			return
+		} else {
+			ExpandPath(command)
+		}
+
 	}
 
 }
