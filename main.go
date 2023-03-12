@@ -27,15 +27,14 @@ func ExpandPath(command string) {
 	paths := []string{""}
 	temp := []string{}
 
+	// fmt.Println(len(subCommands))
+
 	for commandIndex, subCommand := range subCommands {
 		splitByPlus := strings.Split(subCommand, "+")
-		if len(splitByPlus) < 2 {
-
-		}
 		for _, dir := range splitByPlus {
 			for _, path := range paths {
 
-				if string(dir[0]) == "$" {
+				if len(dir) > 0 && string(dir[0]) == "$" {
 
 					dir = globaVar + dir[1:]
 				} else {
@@ -48,7 +47,6 @@ func ExpandPath(command string) {
 		paths = temp
 		temp = nil
 	}
-
 	dirfUtils.CreateFromPaths(paths)
 
 }
@@ -88,8 +86,6 @@ func main() {
 				fmt.Println("Error: " + "\"" + string(command[1:]) + "\"" + " " + "not recognized")
 				fmt.Println("-h, --help for help menu")
 			}
-
-			return
 		} else {
 			ExpandPath(command)
 		}
